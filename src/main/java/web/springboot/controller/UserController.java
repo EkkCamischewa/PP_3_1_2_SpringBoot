@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.springboot.model.User;
-import web.springboot.service.UserService;
+import web.springboot.service.UserServiceInt;
 
 
 import java.util.List;
@@ -14,8 +14,12 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
+    private final UserServiceInt userService;
+
     @Autowired
-    private UserService userService;
+    UserController(UserServiceInt userService){
+        this.userService=userService;
+    }
 
     @GetMapping("/all")
     public String getAllPeople(Model model) {
@@ -48,13 +52,13 @@ public class UserController {
         return "users/edit";
     }
 
-    @PostMapping("/particular")
+    @PatchMapping("/particular")
     public String editUser(@ModelAttribute("user") User user) {
         userService.updateUser(user);
         return "redirect:/users/all";
     }
 
-    @PostMapping("/particular/delete")
+    @DeleteMapping("/particular/delete")
     public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/users/all";
